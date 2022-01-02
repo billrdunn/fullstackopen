@@ -9,11 +9,16 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
+    console.log('event.target :>> ', event.target);
     const personObject = {
       name: newName,
     }
-    console.log('event.target :>> ', event.target);
-    setPersons(persons.concat(personObject))
+    if (persons.some(person => person.name === newName)) {
+      console.log(`${newName} already exists`);
+      window.alert(`${newName} already exists`)
+    } else {
+      setPersons(persons.concat(personObject))
+    }
   }
 
   const handleNameChange = (event) => {
