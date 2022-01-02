@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import Entry from './components/Entry'
+import Search from './components/Search'
+import NewEntryForm from './components/NewEntryForm'
 
 const App = () => {
   const [entries, setEntries] = useState([
@@ -52,22 +54,17 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      search <input 
+      <Search
         value = {searchTerm}
         onChange={handleSearchChange}/>
-      <form onSubmit={addEntry}>
-        name: <input
-          value={newName}
-          onChange={handleNameChange} />
-          <div>
-        number: <input
-          value={newNumber}
-          onChange={handleNumberChange} />
-          </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <h2>Add New</h2>
+      <NewEntryForm 
+        onSubmit={addEntry} 
+        onNameChange={handleNameChange} 
+        onNumberChange={handleNumberChange} 
+        nameValue={newName}
+        numberValue={newNumber}>
+      </NewEntryForm>
       <h2>Numbers</h2>
       <ul>
         {reducedEntries.map(entry => <Entry key={entry.id} name={entry.name} number={entry.number}></Entry>)}
