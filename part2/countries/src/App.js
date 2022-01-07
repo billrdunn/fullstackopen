@@ -6,6 +6,7 @@ import Country from './components/Country'
 
 const App = () => {
   const [countries, setCountries] = useState([])
+  const [displayedCountryID, setDisplayedCountry] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
 
   useEffect(() => {
@@ -21,6 +22,7 @@ const App = () => {
 
   const handleSearchChange = (event) => {
     console.log('event.target.value :>> ', event.target.value);
+    setDisplayedCountry('')
     setSearchTerm(event.target.value)
   }
 
@@ -44,12 +46,24 @@ const App = () => {
     const countries = getFilteredCountries();
     if (getFilteredCountries().length === 1) {
       return (<Country key={countries[0].ccn3} country={countries[0]} />)
-    } else {
+    } 
+    else if (displayedCountryID !== '') {
+      const country = countries.filter(country => country.cca3 === displayedCountryID)[0]
+      return (<Country key={displayedCountryID} country={country} />)
+    }
+    else {
       return (
         getFilteredCountries().map(
-          item => <CountryListItem key={item.ccn3} name={item.name.common}></CountryListItem>))
+          item => <CountryListItem key={item.ccn3}
+            name={item.name.common} handleClick={handleButtonClick(item.cca3)}></CountryListItem>))
     }
   }
+
+  const handleButtonClick = (cca3) => (
+    () => {
+      setDisplayedCountry(cca3)
+    }
+  )
 
   return (
   <div>

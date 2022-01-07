@@ -1,9 +1,9 @@
 import React from 'react';
 
-const CountryListItem = ({ name }) => {
+const CountryListItem = ({ name, handleClick }) => {
     console.log('printing name :>> ', name);
     return (
-        <div>{name}</div>
+        <div>{name} <button onClick={handleClick}>show</button></div>
         )
 }
 
