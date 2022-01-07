@@ -3,9 +3,11 @@ import axios from 'axios'
 import Search from './components/Search'
 import CountryListItem from './components/CountryListItem'
 import Country from './components/Country'
+import Weather from './components/Weather'
 
 const App = () => {
   const [countries, setCountries] = useState([])
+  const [weather, setWeather] = useState([])
   const [displayedCountryID, setDisplayedCountry] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -18,6 +20,16 @@ const App = () => {
         setCountries(response.data)
       })
   }, [])
+
+  const getWeather = (cityID) => {
+    //2643743
+    axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?id=${cityID}&appid=${process.env.REACT_APP_API_KEY}`)
+      .then(response => {
+        console.log('promise fulfilled')
+        setWeather(response.data)
+      })
+  }
 
 
   const handleSearchChange = (event) => {
@@ -45,9 +57,11 @@ const App = () => {
   const displayInfo = () => {
     const countries = getFilteredCountries();
     if (getFilteredCountries().length === 1) {
+      getWeather(2643743)
       return (<Country key={countries[0].ccn3} country={countries[0]} />)
     } 
     else if (displayedCountryID !== '') {
+      getWeather(2643743)
       const country = countries.filter(country => country.cca3 === displayedCountryID)[0]
       return (<Country key={displayedCountryID} country={country} />)
     }
@@ -73,6 +87,7 @@ const App = () => {
         onChange={handleSearchChange} />
       <h2>Results</h2>
       {displayInfo()}
+      <Weather data={weather}></Weather>
     </div>
 
   )
