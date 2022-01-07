@@ -20,7 +20,8 @@ const App = () => {
     console.log('event.target :>> ', event.target);
     const newEntry = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+      id: entries.length + 1
     }
     if (entries.some(entry => entry.name === newName)) {
       console.log(`${newName} already exists`);
@@ -31,7 +32,9 @@ const App = () => {
       window.alert(`${newNumber} already exists`)
     } 
     else {
+      console.log('setting new entries');
       setEntries(entries.concat(newEntry))
+      setReducedEntries(entries.concat(newEntry))
     }
   }
 
