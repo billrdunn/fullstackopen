@@ -1,49 +1,14 @@
 {
   "entries": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
+      "name": "a",
+      "number": "2",
       "id": 1
     },
     {
-      "name": "Ada Lovelace",
-      "number": "39-44-5323523",
-      "id": 2
-    },
-    {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": 3
-    },
-    {
-      "name": "Mary Poppendieck",
-      "number": "39-23-6423122",
-      "id": 4
-    },
-    {
-      "name": "james",
-      "number": "1234",
+      "name": "fgjhgj",
+      "number": "23667",
       "id": 5
-    },
-    {
-      "name": "jamessdf",
-      "number": "12343",
-      "id": 6
-    },
-    {
-      "name": "bill",
-      "number": "1234634",
-      "id": 7
-    },
-    {
-      "name": "billd",
-      "number": "12",
-      "id": 8
-    },
-    {
-      "name": "sdklfjks",
-      "number": "235426",
-      "id": 9
     }
   ]
 }

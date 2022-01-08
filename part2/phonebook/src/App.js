@@ -46,6 +46,17 @@ const App = () => {
     }
   }
 
+  const deleteEntry = (id) => {
+    console.log('deleting entry')
+    entryService
+      .remove(id)
+      .then(response => {
+        console.log('response :>> ', response);
+        setEntries(entries.filter(entry => entry.id !== id))
+        setReducedEntries(entries.filter(entry => entry.id !== id))
+      })
+  }
+
   const handleNameChange = (event) => {
     console.log('event.target.value :>> ', event.target.value);
     setNewName(event.target.value)
@@ -62,6 +73,13 @@ const App = () => {
       entry.name.toLowerCase().includes(event.target.value)))
     setSearchTerm(event.target.value)
   }
+
+  const handleDeleteClicked = (entry) => {
+    if (window.confirm(`Delete ${entry.name}?`)) {
+      deleteEntry(entry.id)
+    }
+  }
+
 
   return (
     <div>
@@ -81,7 +99,8 @@ const App = () => {
       <ul>
         {reducedEntries.map(
           entry => <Entry
-            key={entry.id} name={entry.name} number={entry.number}>
+            key={entry.id} name={entry.name} number={entry.number} 
+            onClick={() => handleDeleteClicked(entry)}>
           </Entry>)}
       </ul>
     </div>
