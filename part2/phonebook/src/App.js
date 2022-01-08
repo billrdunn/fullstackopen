@@ -27,7 +27,6 @@ const App = () => {
     const newEntry = {
       name: newName,
       number: newNumber,
-      id: entries.length + 1
     }
     if (entries.some(entry => entry.name === newName)) {
       console.log(`${newName} already exists`);
@@ -38,9 +37,14 @@ const App = () => {
       window.alert(`${newNumber} already exists`)
     } 
     else {
-      console.log('setting new entries');
-      setEntries(entries.concat(newEntry))
-      setReducedEntries(entries.concat(newEntry))
+      console.log('sending data to json server');
+      axios
+        .post('http://localhost:3001/persons', newEntry)
+        .then(response => {
+          console.log(response)
+          setEntries(entries.concat(response.data))
+          setReducedEntries(entries.concat(response.data))
+        })
     }
   }
 
@@ -70,13 +74,16 @@ const App = () => {
       <NewEntryForm 
         onSubmit={addEntry} 
         onNameChange={handleNameChange} 
-        onNumberChange={handleNumberChange} 
+        onNumberChange={handleNumberChange}
         nameValue={newName}
         numberValue={newNumber}>
       </NewEntryForm>
       <h2>Numbers</h2>
       <ul>
-        {reducedEntries.map(entry => <Entry key={entry.id} name={entry.name} number={entry.number}></Entry>)}
+        {reducedEntries.map(
+          entry => <Entry
+            key={entry.id} name={entry.name} number={entry.number}>
+          </Entry>)}
       </ul>
     </div>
   )
