@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import Entry from './components/Entry'
 import Search from './components/Search'
 import NewEntryForm from './components/NewEntryForm'
+import entryService from './services/entries'
 
 const App = () => {
   const [entries, setEntries] = useState([]) 
@@ -13,11 +13,10 @@ const App = () => {
 
   useEffect(() => {
     console.log('effect');
-    axios
-      .get('http://localhost:3001/persons')
+    entryService
+      .getAll()
       .then(response => {
-        console.log('promise fulfilled')
-        setEntries(response.data)
+        setEntries(response)
       })
   }, [])
 
@@ -38,12 +37,11 @@ const App = () => {
     } 
     else {
       console.log('sending data to json server');
-      axios
-        .post('http://localhost:3001/persons', newEntry)
+      entryService
+        .create(newEntry)
         .then(response => {
-          console.log(response)
-          setEntries(entries.concat(response.data))
-          setReducedEntries(entries.concat(response.data))
+          setEntries(entries.concat(response))
+          setReducedEntries(entries.concat(response))
         })
     }
   }
@@ -60,7 +58,8 @@ const App = () => {
 
   const handleSearchChange = (event) => {
     console.log('event.target.value :>> ', event.target.value);
-    setReducedEntries(entries.filter(entry => entry.name.toLowerCase().includes(event.target.value)))
+    setReducedEntries(entries.filter(entry => 
+      entry.name.toLowerCase().includes(event.target.value)))
     setSearchTerm(event.target.value)
   }
 
