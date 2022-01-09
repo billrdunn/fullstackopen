@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Entry from './components/Entry'
 import Search from './components/Search'
+import Notification from './components/Notification'
 import NewEntryForm from './components/NewEntryForm'
 import entryService from './services/entries'
 
@@ -10,6 +11,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [confirmationMessage, setConfirmationMessage] = useState(null)
 
   useEffect(() => {
     console.log('effect');
@@ -36,6 +38,13 @@ const App = () => {
             .then(response => {
               setEntries(entries.map(entry => entry.id === response.id ? response : entry))
               setReducedEntries(entries.map(entry => entry.id === response.id ? response : entry))
+              setConfirmationMessage(`${newName}'s number was updated`)
+              setTimeout(() => {
+                setConfirmationMessage(null)
+              }, 5000)
+            })
+            .catch(error => {
+              alert(`The entry ${newName} was already deleted from server`)
             })
       }
 
@@ -51,18 +60,27 @@ const App = () => {
         .then(response => {
           setEntries(entries.concat(response))
           setReducedEntries(entries.concat(response))
+          setConfirmationMessage(`${newName} was added to the phonebook`)
+          setTimeout(() => {
+            setConfirmationMessage(null)
+          }, 5000)
         })
     }
   }
 
   const deleteEntry = (id) => {
     console.log('deleting entry')
+    const entry = entries.find(entry => entry.id === id)
     entryService
       .remove(id)
       .then(response => {
         console.log('response :>> ', response);
         setEntries(entries.filter(entry => entry.id !== id))
         setReducedEntries(entries.filter(entry => entry.id !== id))
+        setConfirmationMessage(`${entry.name} was removed from the phonebook`)
+        setTimeout(() => {
+          setConfirmationMessage(null)
+        }, 5000)
       })
   }
 
@@ -93,6 +111,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={confirmationMessage} />
       <Search
         value={searchTerm}
         onChange={handleSearchChange} />

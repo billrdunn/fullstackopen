@@ -4,7 +4,9 @@ const Entry = ({ name, number, onClick }) => {
     console.log('printing name :>> ', name);
     console.log('printing number :>> ', number);
     return (<div>
-        <li>{name}: {number} <button onClick={onClick}>delete</button></li>
+        <li className='entry'>
+            {name}: {number} <button onClick={onClick}>delete</button>
+        </li>
     </div>)
 }
 
