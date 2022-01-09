@@ -11,7 +11,10 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
-  const [confirmationMessage, setConfirmationMessage] = useState(null)
+  const [notification, setNotification] = useState({
+    message: null,
+    isError: false
+  })
 
   useEffect(() => {
     console.log('effect');
@@ -38,13 +41,16 @@ const App = () => {
             .then(response => {
               setEntries(entries.map(entry => entry.id === response.id ? response : entry))
               setReducedEntries(entries.map(entry => entry.id === response.id ? response : entry))
-              setConfirmationMessage(`${newName}'s number was updated`)
+              setNotification({message: `${newName}'s number was updated`, isError: false})
               setTimeout(() => {
-                setConfirmationMessage(null)
+                setNotification({message: null, isError: false})
               }, 5000)
             })
             .catch(error => {
-              alert(`The entry ${newName} was already deleted from server`)
+              setNotification({message: `The entry ${newName} was already deleted from server`, isError: true})
+              setTimeout(() => {
+                setNotification({message: null, isError: false})
+              }, 5000)
             })
       }
 
@@ -60,9 +66,9 @@ const App = () => {
         .then(response => {
           setEntries(entries.concat(response))
           setReducedEntries(entries.concat(response))
-          setConfirmationMessage(`${newName} was added to the phonebook`)
+          setNotification({message: `${newName} was added to the phonebook`, isError: false})
           setTimeout(() => {
-            setConfirmationMessage(null)
+            setNotification({message: null, isError: false})
           }, 5000)
         })
     }
@@ -77,9 +83,9 @@ const App = () => {
         console.log('response :>> ', response);
         setEntries(entries.filter(entry => entry.id !== id))
         setReducedEntries(entries.filter(entry => entry.id !== id))
-        setConfirmationMessage(`${entry.name} was removed from the phonebook`)
+        setNotification({message: `${entry.name} was removed from the phonebook`, isError: false})
         setTimeout(() => {
-          setConfirmationMessage(null)
+          setNotification({message: null, isError: false})
         }, 5000)
       })
   }
@@ -111,7 +117,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Notification message={confirmationMessage} />
+      <Notification notification={notification} />
       <Search
         value={searchTerm}
         onChange={handleSearchChange} />
