@@ -5,7 +5,7 @@ import Notification from './components/Notification'
 import NewEntryForm from './components/NewEntryForm'
 import entryService from './services/entries'
 
-const App = () => {
+function App() {
   const [entries, setEntries] = useState([])
   const [reducedEntries, setReducedEntries] = useState(entries)
   const [newName, setNewName] = useState('')
@@ -13,99 +13,100 @@ const App = () => {
   const [searchTerm, setSearchTerm] = useState('')
   const [notification, setNotification] = useState({
     message: null,
-    isError: false
+    isError: false,
   })
 
   useEffect(() => {
-    console.log('effect');
+    console.log('effect')
     entryService
       .getAll()
-      .then(response => {
+      .then((response) => {
         setEntries(response)
       })
   }, [])
 
   const addEntry = (event) => {
     event.preventDefault()
-    console.log('(addEntry) event.target :>> ', event.target);
+    console.log('(addEntry) event.target :>> ', event.target)
     const newEntry = {
       name: newName,
       number: newNumber,
     }
-    if (entries.some(entry => entry.name === newName)) {
-      const entry = entries.find(entry => entry.name === newName)
+    if (entries.some((entry) => entry.name === newName)) {
+      const entry = entries.find((entry) => entry.name === newName)
       if (window.confirm(
-        `${newName} already exists, replace old number with new?`)) {
-          entryService
-            .update(entry.id, newEntry)
-            .then(response => {
-              setEntries(entries.map(entry => entry.id === response.id ? response : entry))
-              setReducedEntries(entries.map(entry => entry.id === response.id ? response : entry))
-              setNotification({message: `${newName}'s number was updated`, isError: false})
-              setTimeout(() => {
-                setNotification({message: null, isError: false})
-              }, 5000)
-            })
-            .catch(error => {
-              setNotification({message: `The entry ${newName} was already deleted from server`, isError: true})
-              setTimeout(() => {
-                setNotification({message: null, isError: false})
-              }, 5000)
-            })
+        `${newName} already exists, replace old number with new?`,
+      )) {
+        entryService
+          .update(entry.id, newEntry)
+          .then((response) => {
+            setEntries(entries.map((entry) => (entry.id === response.id ? response : entry)))
+            setReducedEntries(entries.map((entry) => (entry.id === response.id ? response : entry)))
+            setNotification({ message: `${newName}'s number was updated`, isError: false })
+            setTimeout(() => {
+              setNotification({ message: null, isError: false })
+            }, 5000)
+          })
+          .catch((error) => {
+            setNotification({ message: `The entry ${newName} was already deleted from server`, isError: true })
+            setTimeout(() => {
+              setNotification({ message: null, isError: false })
+            }, 5000)
+          })
       }
-
-    }
-    else if (entries.some(entry => entry.number === newNumber)) {
-      console.log(`${newNumber} already exists`);
+    } else if (entries.some((entry) => entry.number === newNumber)) {
+      console.log(`${newNumber} already exists`)
       window.alert(`${newNumber} already exists`)
-    }
-    else {
-      console.log('sending data to json server');
+    } else {
+      console.log('sending data to json server')
       entryService
         .create(newEntry)
-        .then(response => {
+        .then((response) => {
           setEntries(entries.concat(response))
           setReducedEntries(entries.concat(response))
-          setNotification({message: `${newName} was added to the phonebook`, isError: false})
+          setNotification({ message: `${newName} was added to the phonebook`, isError: false })
           setTimeout(() => {
-            setNotification({message: null, isError: false})
+            setNotification({ message: null, isError: false })
           }, 5000)
+        })
+        .catch((error) => {
+          console.log('error.response.data :>> ', error.response.data)
+          setNotification({ message: error.response.data.error, isError: true })
         })
     }
   }
 
   const deleteEntry = (id) => {
     console.log('deleting entry')
-    const entry = entries.find(entry => entry.id === id)
+    const entry = entries.find((entry) => entry.id === id)
     entryService
       .remove(id)
-      .then(response => {
-        console.log('response :>> ', response);
-        setEntries(entries.filter(entry => entry.id !== id))
-        setReducedEntries(entries.filter(entry => entry.id !== id))
-        setNotification({message: `${entry.name} was removed from the phonebook`, isError: false})
+      .then((response) => {
+        console.log('response :>> ', response)
+        setEntries(entries.filter((entry) => entry.id !== id))
+        setReducedEntries(entries.filter((entry) => entry.id !== id))
+        setNotification({ message: `${entry.name} was removed from the phonebook`, isError: false })
         setTimeout(() => {
-          setNotification({message: null, isError: false})
+          setNotification({ message: null, isError: false })
         }, 5000)
       })
   }
 
   const handleNameChange = (event) => {
-    console.log('event.target.value :>> ', event.target.value);
+    console.log('event.target.value :>> ', event.target.value)
     setNewName(event.target.value)
   }
 
   const handleNumberChange = (event) => {
-    console.log('event.target.value :>> ', event.target.value);
+    console.log('event.target.value :>> ', event.target.value)
     setNewNumber(event.target.value)
   }
 
   const handleSearchChange = (event) => {
-    console.log('event.target.value :>> ', event.target.value);
-    setReducedEntries(entries.filter(entry =>
-      entry.name &&
-      entry.number &&
-      entry.name.toLowerCase().includes(event.target.value)))
+    console.log('event.target.value :>> ', event.target.value)
+    setReducedEntries(entries.filter((entry) => entry.name
+      && entry.number
+      && entry.name.toLowerCase().includes(event.target.value)))
     setSearchTerm(event.target.value)
   }
 
@@ -115,29 +116,34 @@ const App = () => {
     }
   }
 
-
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h2>PHONEBOOK</h2>
       <Notification notification={notification} />
       <Search
         value={searchTerm}
-        onChange={handleSearchChange} />
+        onChange={handleSearchChange}
+      />
       <h2>Add New</h2>
       <NewEntryForm
         onSubmit={addEntry}
         onNameChange={handleNameChange}
         onNumberChange={handleNumberChange}
         nameValue={newName}
-        numberValue={newNumber}>
-      </NewEntryForm>
+        numberValue={newNumber}
+      />
       <h2>Numbers</h2>
       <ul>
         {reducedEntries.map(
-          entry => <Entry
-            key={entry.id} name={entry.name} number={entry.number}
-            onClick={() => handleDeleteClicked(entry)}>
-          </Entry>)}
+          (entry) => (
+            <Entry
+              key={entry.id}
+              name={entry.name}
+              number={entry.number}
+              onClick={() => handleDeleteClicked(entry)}
+            />
+          ),
+        )}
       </ul>
     </div>
   )
