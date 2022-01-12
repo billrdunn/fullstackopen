@@ -103,6 +103,8 @@ const App = () => {
   const handleSearchChange = (event) => {
     console.log('event.target.value :>> ', event.target.value);
     setReducedEntries(entries.filter(entry =>
+      entry.name &&
+      entry.number &&
       entry.name.toLowerCase().includes(event.target.value)))
     setSearchTerm(event.target.value)
   }
